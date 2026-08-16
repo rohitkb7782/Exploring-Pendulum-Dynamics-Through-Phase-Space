@@ -73,6 +73,13 @@ def animate_pendulum(states, times, consts):
     ax2.plot(all_thetas, separatrix, "--", color="black", linewidth=0.7, label="Undamped Separatrix")
     ax2.plot(all_thetas, -separatrix, "--", color="black", linewidth=0.7)
     ax2.legend()
+
+    # Stable equilibria: theta = 2πn, p = 0
+    theta_min, theta_max = ax2.get_xlim()
+    n_min = int(np.ceil(theta_min / (2 * np.pi)))
+    n_max = int(np.floor(theta_max / (2 * np.pi)))
+    theta_eq = 2 * np.pi * np.arange(n_min, n_max + 1)
+    ax2.plot(theta_eq, np.zeros_like(theta_eq), 'ko', ms=2)
     
     # Phase-space trajectory and current point
     phase_line, = ax2.plot([], [])
