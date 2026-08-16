@@ -213,9 +213,113 @@ The comparison therefore asks whether a numerical method reproduces the characte
 
 ## Results
 
-### 1. Numerical Methods and Long-Term Behavior
+## Results
 
-Compare Euler and Euler-Cromer through angle, energy, and phase space.
+The first two results use the **linearized pendulum** rather than the full nonlinear equation. This provides a simpler mathematical setting in which to isolate the behavior of the numerical methods before introducing nonlinear phase-space geometry.
+
+### 1. Euler vs. Euler-Cromer — $\theta(t)$ and Energy
+
+The first comparison shows the angular displacement and mechanical energy of the linearized pendulum over many oscillation periods.
+
+![Euler vs. Euler-Cromer](files/euler_vs_euler-cromer.png?raw=true)
+
+Figure 1. Euler's Method and Euler-Cromer compared through angular displacement and mechanical energy for the linearized pendulum.
+
+Although both methods initially produce similar motion, their long-term behavior quickly diverges. With Euler's Method, the amplitude grows continuously, accompanied by rapid growth in the numerical energy. Euler-Cromer's amplitude remains approximately constant, while its energy stays bounded and oscillates around the expected value.
+
+Thus, over long times, Euler's Method causes the simulated oscillator to gain energy and grow in amplitude, while Euler-Cromer maintains bounded oscillatory motion.
+
+### 2. Euler vs. Euler-Cromer — Phase Space
+
+The difference becomes even clearer in phase space. For the linearized pendulum,
+
+$$
+\ddot{\theta}+\omega_0^2\theta=0,
+$$
+
+where
+
+$$
+\omega_0=\sqrt{\frac{g}{L}}
+$$
+
+is the natural angular frequency.
+
+The Euler and Euler-Cromer updates can be written as matrix transformations:
+
+$$
+A_{\mathrm{Euler}}=
+\begin{pmatrix}
+1 & h\\
+-h\omega_0^2 & 1
+\end{pmatrix},
+$$
+
+and
+
+$$
+A_{\mathrm{EC}}=
+\begin{pmatrix}
+1-h^2\omega_0^2 & h\\
+-h\omega_0^2 & 1
+\end{pmatrix}.
+$$
+
+Their determinants are
+
+$$
+\det(A_{\mathrm{Euler}})
+=1+h^2\omega_0^2>1,
+$$
+
+while
+
+$$
+\det(A_{\mathrm{EC}})=1.
+$$
+
+Because the determinant gives the factor by which a two-dimensional transformation scales area, Euler expands phase-space area at every timestep, while Euler-Cromer preserves it.
+
+Figure 2. Phase-space trajectories produced by Euler's Method and Euler-Cromer for the linearized pendulum.
+
+![Euler vs. Euler-Cromer Phase Space](files/euler_vs_euler-cromer_phase_space.png?raw=true))
+
+This connects directly to the energy behavior in Figure 2. For the linearized pendulum, the mass-normalized energy is
+
+$$
+E=\frac12\dot{\theta}^2+\frac12\omega_0^2\theta^2.
+$$
+
+Constant-energy trajectories are ellipses,
+
+$$
+\frac{\theta^2}{a^2}
++
+\frac{\dot{\theta}^2}{b^2}
+=1,
+$$
+
+with
+
+$$
+a=\frac{\sqrt{2E}}{\omega_0},
+\qquad
+b=\sqrt{2E}.
+$$
+
+Their enclosed area is therefore
+
+$$
+A=\pi ab=\frac{2\pi E}{\omega_0},
+$$
+
+so
+
+$$
+A\propto E.
+$$
+
+The outward expansion of Euler's phase-space trajectory therefore corresponds directly to its artificial growth in energy, while Euler-Cromer's area-preserving update keeps the trajectory bounded.
 
 ### 2. Phase-Space Geometry of the Linear and Nonlinear Pendulum
 
