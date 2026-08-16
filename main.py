@@ -56,7 +56,6 @@ plt.legend()
 
 plt.tight_layout()
 plt.savefig("euler_vs_euler-cromer.png")
-plt.show()
 
 #---------------------------------------
 
@@ -243,7 +242,6 @@ ax4.legend(loc='upper left', bbox_to_anchor=(0.02, 0.98))
 fig.suptitle("Commensurability and Stroboscopic Phase Drift", fontsize=16)
 
 plt.tight_layout()
-plt.show()
 plt.savefig("stroboscope_basics.png")
 
 
@@ -286,5 +284,4 @@ ax2.set_ylabel(r"Angle, $\theta$ [rad]")
 ax2.legend(loc='upper left', bbox_to_anchor=(0.02, 0.98), borderaxespad=0)
 
 plt.tight_layout()
-plt.show()
 plt.savefig("stroboscope_pendulum.png")
