@@ -1,407 +1,325 @@
-# Numerical Investigation of a Nonlinear Pendulum
+# Exploring Pendulum Dynamics Through Phase Space
 
-A computational physics project investigating the dynamics of a pendulum through numerical simulation. The project begins by comparing Euler's Method and Euler-Cromer for the undamped pendulum, using energy behavior to examine the numerical properties of each method.
+A computational physics project investigating how phase space can be used to visualize and interpret the dynamics of a pendulum. The project begins with numerical integration and a comparison of Euler's Method and Euler-Cromer, then uses phase-space geometry to examine the transition from linear to nonlinear behavior, the effects of damping, and the structure revealed by stroboscopic sampling.
 
-The model is then extended to investigate nonlinear effects, damping, and external forcing. In particular, the project explores how the pendulum's period depends on amplitude, how damping changes the phase-space dynamics, and how an external driving force produces resonance.
+![Phase space](files/stroboscope_pendulum.png?raw=true)
 
-The project follows the progression
-
-$$
-\boxed{
-\text{numerical methods}
-\rightarrow
-\text{nonlinear dynamics}
-\rightarrow
-\text{damping}
-\rightarrow
-\text{phase space}
-\rightarrow
-\text{external forcing}
-\rightarrow
-\text{resonance}
-}
-$$
+**Figure 1.** [Opening figure/collage to be selected.]
 
 ## Motivation
 
-The simple pendulum is often introduced using the small-angle approximation, where the equation of motion becomes that of a simple harmonic oscillator.
+### Phase Space
 
-For sufficiently small angles,
+Motion is often represented by plotting a variable such as position or angle against time. While this shows how a system evolves, it can hide the underlying structure of that motion. Phase space provides a different perspective by representing the state of a system through its position and velocity. For the pendulum, this state is
+
+$$
+(\theta,\omega),
+$$
+
+where $\theta$ is the angular displacement and $\omega$ is the angular velocity.
+
+The resulting trajectory gives a geometric view of the dynamics. Periodic oscillations appear as closed curves, rotational motion follows different trajectories, and the boundary between these regimes appears as a separatrix. Numerical error, damping, and nonlinear effects can therefore be studied through changes in phase-space geometry.
+
+Rather than asking only *where is the pendulum at a given time?*, phase space allows us to ask *what states can the pendulum occupy, and how does it move between them?*
+
+### The Pendulum
+
+The pendulum is a simple system that contains several important features of nonlinear dynamics. At small angles, it can be approximated as a linear harmonic oscillator through
 
 $$
 \sin\theta \approx \theta,
 $$
 
-giving the familiar linear equation
+providing a direct comparison between linear and nonlinear behavior within the same physical system.
+
+At larger amplitudes, nonlinear effects distort the phase-space trajectories and produce a separatrix between oscillatory and rotational motion. Damping adds another layer by causing the system to lose energy and potentially move between these dynamical regimes.
+
+The pendulum therefore provides a compact setting for exploring how numerical methods, nonlinearity, energy, and damping shape the geometry of a dynamical system.
+
+### Research Question
+
+> **How does the geometry of phase space reveal the dynamics of a pendulum?**
+
+This question guides the project from numerical simulation to phase-space analysis, using computation not simply to model the pendulum's motion, but to reveal the structure of its dynamics.
+
+## Mathematical Model
+
+### Pendulum Equation
+
+Consider a pendulum of length $L$ and mass $m$, with angular displacement $\theta$ measured from the downward vertical. In the absence of damping or external forcing, its equation of motion is
+
+$$
+\ddot{\theta}+\frac{g}{L}\sin\theta=0,
+$$
+
+where $g$ is the acceleration due to gravity.
+
+The $\sin\theta$ term makes the pendulum a nonlinear dynamical system. Writing the equation as a first-order system,
+
+$$
+\dot{\theta}=\omega,
+$$
+
+$$
+\dot{\omega}=-\frac{g}{L}\sin\theta,
+$$
+
+gives the state variables used to construct the phase-space trajectories:
+
+$$
+(\theta,\omega).
+$$
+
+### Linearized Pendulum
+
+For small angular displacements,
+
+$$
+\sin\theta\approx\theta,
+$$
+
+so the equation becomes
 
 $$
 \ddot{\theta}+\frac{g}{L}\theta=0.
 $$
 
-However, the full pendulum equation is nonlinear:
+This is the equation of a simple harmonic oscillator with natural frequency
 
 $$
-\ddot{\theta}+\frac{g}{L}\sin\theta=0.
+\omega_0=\sqrt{\frac{g}{L}}.
 $$
 
-This makes the pendulum a useful system for exploring both numerical methods and nonlinear dynamics.
+The linearized model provides a useful reference for the full nonlinear system. At small amplitudes, their behavior is nearly identical, but at larger amplitudes the approximation breaks down and the phase-space geometry begins to diverge.
 
-The project begins by comparing Euler's Method with Euler-Cromer and examining how each method behaves when applied to a conservative system. The nonlinear pendulum is then investigated by measuring how its period changes with initial amplitude.
+### Damped Pendulum
 
-Damping is introduced next, allowing the evolution of energy and phase-space trajectories to be studied. Finally, an external driving force is added to investigate transient behavior and resonance, including how the resonance response changes with damping.
-
-The main goal is to use numerical simulation not simply to reproduce pendulum motion, but to investigate the physical and mathematical structure of the system.
-
-## Mathematical Model
-
-The pendulum is represented by the state vector
+To investigate energy loss, a damping term is added:
 
 $$
-\mathbf{s}=
-\begin{bmatrix}
-\theta\\
-\omega
-\end{bmatrix}
+\ddot{\theta}+b\dot{\theta}+\frac{g}{L}\sin\theta=0,
 $$
 
-where $\theta$ is the angular displacement and $\omega=\dot{\theta}$ is the angular velocity.
+where $b$ is the damping coefficient.
 
-The equation of motion is written as a coupled system of first-order differential equations.
+Damping causes the mechanical energy of the pendulum to decrease over time. In phase space, this changes the trajectories from closed curves into inward spirals, allowing the system to transition from higher-energy motion toward oscillations around the stable equilibrium.
 
-### Undamped Pendulum
+### Energy and the Separatrix
 
-For an ideal undamped pendulum,
+For the undamped pendulum, the mechanical energy is conserved. The kinetic and potential energies are
 
 $$
-\frac{d\theta}{dt}=\omega
+K=\frac{1}{2}mL^2\dot{\theta}^2
 $$
 
 and
 
 $$
-\frac{d\omega}{dt}=
--\frac{g}{L}\sin\theta.
-$$
-
-The corresponding total mechanical energy is
-
-$$
-E=
-\frac{1}{2}mL^2\omega^2
-+
-mgL(1-\cos\theta).
-$$
-
-For the continuous system, this quantity is conserved.
-
-### Damped Pendulum
-
-Linear damping is introduced through a resistive torque proportional to angular velocity.
-
-The equation becomes
-
-$$
-mL^2\ddot{\theta}
-+
-b\dot{\theta}
-+
-mgL\sin\theta
-=0,
-$$
-
-or
-
-$$
-\ddot{\theta}=
--\frac{g}{L}\sin\theta
--\frac{b}{mL^2}\dot{\theta}.
-$$
-
-The damping term removes mechanical energy from the system, causing the oscillation amplitude to decrease with time.
-
-For the parameters used in the simulations,
-
-$$
-g=9.8\ {\rm m/s^2},
-\qquad
-L=1\ {\rm m},
-\qquad
-m=5\ {\rm kg},
-\qquad
-b=0.4\ {\rm kg/s}.
-$$
-
-### Driven Pendulum
-
-An external sinusoidal torque is added to investigate forced oscillations:
-
-$$
-mL^2\ddot{\theta}
-+
-b\dot{\theta}
-+
-mgL\sin\theta=
-\tau_0\sin(\omega_d t),
-$$
-
-where $\tau_0$ is the driving torque amplitude and $\omega_d$ is the driving frequency.
-
-The resulting equation is
-
-$$
-\ddot{\theta}=
--\frac{g}{L}\sin\theta
--\frac{b}{mL^2}\dot{\theta}
-+
-\frac{\tau_0}{mL^2}\sin(\omega_d t).
-$$
-
-This system contains both transient and steady-state behavior. The transient response depends on the initial conditions and decays because of damping, while the steady-state response is maintained by the external driving force.
-
-## Numerical Methods
-
-The equations of motion are solved numerically using Euler's Method and Euler-Cromer.
-
-### Euler's Method
-
-Euler's Method updates both position and velocity using the values at the beginning of each timestep:
-
-$$
-\theta_{n+1}=
-\theta_n
-+
-\Delta t\,\omega_n
-$$
-
-$$
-\omega_{n+1}=
-\omega_n
-+
-\Delta t
-\left(
--\frac{g}{L}\sin\theta_n
-\right).
-$$
-
-For a general system
-
-$$
-\frac{d\mathbf{s}}{dt}=f(\mathbf{s},t),
-$$
-
-Euler's Method is
-
-$$
-\mathbf{s}_{n+1}=
-\mathbf{s}_n
-+
-\Delta t\,f(\mathbf{s}_n,t_n).
-$$
-
-Euler's Method has first-order global accuracy, with accumulated error proportional to $\Delta t$.
-
-### Euler-Cromer Method
-
-Euler-Cromer differs by updating the angular velocity before using it to update the angular position:
-
-$$
-\omega_{n+1}=
-\omega_n
-+
-\Delta t
-\left(
--\frac{g}{L}\sin\theta_n
-\right)
-$$
-
-followed by
-
-$$
-\theta_{n+1}=
-\theta_n
-+
-\Delta t\,\omega_{n+1}.
-$$
-
-Although Euler-Cromer has the same formal first-order accuracy as Euler's Method, its structure is much better suited to oscillatory systems. In particular, it avoids the unbounded energy growth that can occur when standard Euler integration is applied to conservative oscillators.
-
-## Results
-
-### 1. Euler vs. Euler-Cromer
-
-The first comparison examines the trajectories produced by Euler's Method and Euler-Cromer for the same undamped pendulum.
-
-![Euler vs Euler-Cromer](images/euler_vs_euler-cromer_angle.png)
-
-**Figure 1.** Angular displacement of the undamped pendulum calculated using Euler's Method and Euler-Cromer. The comparison demonstrates the different numerical behavior of the two integration schemes for an oscillatory system.
-
-Euler's Method gradually introduces energy into the system, causing the oscillation amplitude to grow. Euler-Cromer instead keeps the numerical energy bounded and therefore produces stable oscillations over long times.
-
-### 2. Numerical Energy Behavior
-
-The numerical energy error provides a more quantitative comparison between the two methods.
-
-![Energy Error](images/euler_vs_euler-cromer_energy_error.png)
-
-**Figure 2.** Relative energy error for Euler's Method and Euler-Cromer applied to the undamped pendulum. Euler's Method exhibits systematic energy growth, while Euler-Cromer's energy error remains bounded and oscillatory.
-
-For the physical undamped pendulum, total mechanical energy should remain constant. The bounded oscillations in Euler-Cromer's energy error therefore represent qualitatively different numerical behavior from the secular energy growth produced by standard Euler integration.
-
-This makes Euler-Cromer the preferred method for the subsequent pendulum simulations.
-
-### 3. Nonlinear Dependence of Period on Amplitude
-
-For small initial angles, the pendulum behaves approximately as a simple harmonic oscillator with period
-
-$$
-T_0=
-2\pi\sqrt{\frac{L}{g}}.
-$$
-
-For the parameters used here,
-
-$$
-T_0=
-2\pi\sqrt{\frac{1}{9.8}}
-\approx2.01\ {\rm s}.
-$$
-
-The full nonlinear equation does not have a period that is independent of amplitude. The period was therefore measured numerically for a range of initial angles.
-
-![Period vs Initial Angle](images/period_vs_angle.png)
-
-**Figure 3.** Pendulum period as a function of initial angle. The horizontal reference corresponds to the small-angle prediction $T_0=2\pi\sqrt{L/g}$. The increasing period at larger amplitudes demonstrates the nonlinear behavior of the pendulum.
-
-For small initial angles, the numerical period approaches the small-angle prediction. At larger amplitudes, the period increases because the approximation $\sin\theta\approx\theta$ becomes increasingly inaccurate.
-
-This provides a direct numerical demonstration that the ordinary pendulum is not exactly a simple harmonic oscillator.
-
-### 4. Damping and the Changing Period
-
-Linear damping was then introduced. A large initial amplitude was chosen so that the change in period during the decay could be clearly observed.
-
-![Damped Trajectory](images/damped_angle.png)
-
-**Figure 4.** Angular displacement of a damped pendulum with a large initial amplitude. The periods of the first several oscillations are annotated to show the decrease in period as the amplitude decays. The period approaches the small-angle value of approximately $2.01$ s as the oscillation becomes smaller.
-
-The first oscillations have noticeably longer periods because the pendulum begins in the nonlinear large-amplitude regime. As damping removes energy, the amplitude decreases and the period approaches the small-angle prediction.
-
-For example, the measured periods transition approximately as
-
-$$
-3.00\ {\rm s}
-\rightarrow
-2.20\ {\rm s}
-\rightarrow
-2.00\ {\rm s}
-\rightarrow
-2.00\ {\rm s}.
-$$
-
-Thus damping does more than reduce the amplitude: because the pendulum is nonlinear, the loss of energy also changes the period.
-
-### 5. Phase-Space Dynamics
-
-The dynamics of the pendulum can be represented in phase space by plotting angular velocity against angular displacement.
-
-For the undamped system, trajectories with sufficiently large energy can correspond to continuous rotation, while lower-energy trajectories correspond to oscillation.
-
-The boundary between these two types of motion is the separatrix.
-
-For $\theta_0=0$, the separatrix satisfies
-
-$$
-\frac{1}{2}mL^2\omega^2=
-2mgL,
+U=mgL(1-\cos\theta),
 $$
 
 giving
 
 $$
-\omega=
-\pm2\sqrt{\frac{g}{L}}.
+E=K+U.
 $$
 
-More generally, the separatrix is
+The unstable equilibrium occurs at $\theta=\pi$, where the pendulum is inverted. The energy required to reach this point from the stable equilibrium is
 
 $$
-\omega=
-\pm2\sqrt{\frac{g}{L}}
-\cos\left(\frac{\theta}{2}\right).
+E_{\mathrm{sep}}=2mgL.
 $$
 
-![Phase Space](images/phase_space.png)
-
-**Figure 5.** Phase-space trajectories of the damped and undamped pendulum together with the separatrix. The undamped rotational trajectory remains in the rotational region, while the damped trajectory loses energy, crosses the separatrix, and transitions from rotation to oscillation before approaching equilibrium.
-
-This demonstrates that damping can change not only the amplitude of the motion but its qualitative type. An initially rotating pendulum can lose enough energy to become an oscillating pendulum.
-
-The phase-space representation therefore provides a compact description of the transition
+This energy defines a constant-energy curve in phase space called the separatrix. To obtain its mathematical form, set the total energy equal to the separatrix energy:
 
 $$
-\boxed{
-\text{rotation}
-\rightarrow
-\text{oscillation}
-\rightarrow
-\text{equilibrium}
-}
+\frac{1}{2}mL^2\omega^2+mgL(1-\cos\theta)=2mgL
 $$
 
-### 6. Transient and Steady-State Response
-
-External forcing was then added to the damped pendulum. The resulting motion contains a transient component associated with the initial conditions and a steady-state component maintained by the driving force.
-
-![Transient and Steady State](images/driven_pendulum.png)
-
-**Figure 6.** Angular displacement of the driven pendulum showing transient behavior superimposed on the steady-state response. The transient component decays because of damping, leaving a sustained oscillation determined by the external driving frequency.
-
-The driven response can be viewed schematically as
+Rearranging for $\omega$ yields
 
 $$
-\theta(t)=
-\theta_{\rm transient}(t)
-+
-\theta_{\rm steady}(t).
+\omega^2=\frac{2g}{L}(1+\cos\theta).
 $$
 
-The transient component depends on the initial state and decreases with time because energy is dissipated by damping. The steady-state component remains because energy is continually supplied by the external driving force.
+Using
 
-This separates the short-term response of the system from the long-term response determined by the driving frequency.
+$$
+1+\cos\theta=2\cos^2\left(\frac{\theta}{2}\right),
+$$
 
-### 7. Effect of Damping on Resonance
+the separatrix can be written as
 
-The final experiment investigates the response of the driven pendulum across a range of driving frequencies.
+$$
+\omega = \pm 2\sqrt{\frac{g}{L}}\cos\left(\frac{\theta}{2}\right).
+$$
 
-For each damping coefficient, the transient portion of the motion was allowed to decay before measuring the amplitude of the remaining steady-state oscillation.
+This curve forms the boundary between the two types of motion. For $E<E_{\mathrm{sep}}$, the pendulum oscillates back and forth, while for $E>E_{\mathrm{sep}}$, it has enough energy to rotate continuously.
 
-![Resonance Curves](images/resonance.png)
+The connection between energy and phase-space geometry becomes especially important when damping is introduced. As the pendulum loses energy, its trajectory can cross the separatrix and transition from rotation to oscillation.
 
-**Figure 7.** Steady-state oscillation amplitude as a function of driving frequency for three different damping coefficients. Increasing damping lowers and broadens the resonance peak.
+## Numerical Methods
 
-The response is largest when the driving frequency is close to the characteristic frequency of the system. Increasing the damping reduces the maximum response and broadens the range of frequencies over which the system responds significantly.
+The pendulum equations do not generally have a simple closed-form solution, so its dynamics are computed numerically. This project compares **Euler's Method** with **Euler-Cromer**, focusing not only on numerical accuracy but on how each method affects the long-term behavior and phase-space geometry of the system.
 
-The resonance curve therefore demonstrates how dissipation controls the response of a driven oscillator.
+### Euler's Method
+
+Euler's Method was introduced and tested in the previous project, [*Scaling Laws in Projectile Motion with Quadratic Drag*](https://github.com/rohitkb7782/Scaling-Laws-in-Projectile-Motion-with-Quadratic-Drag), where its first-order convergence was examined against the analytical solution for ideal projectile motion.
+
+For the pendulum, the equations
+
+$$
+\dot{\theta}=\omega,
+\qquad
+\dot{\omega}=-\frac{g}{L}\sin\theta
+$$
+
+are integrated using
+
+$$
+\theta_{n+1}=\theta_n+\omega_n\Delta t,
+$$
+
+$$
+\omega_{n+1}=
+\omega_n-\frac{g}{L}\sin(\theta_n)\Delta t.
+$$
+
+For an ideal pendulum, the true motion remains bounded and its mechanical energy is conserved. Over long integrations, however, Euler's Method systematically introduces energy into the numerical solution, causing the amplitude to grow and the phase-space trajectory to spiral outward.
+
+### Euler-Cromer
+
+Euler-Cromer modifies Euler's Method by updating the angular velocity before using it to update the angle:
+
+$$
+\omega_{n+1}=
+\omega_n-\frac{g}{L}\sin(\theta_n)\Delta t,
+$$
+
+$$
+\theta_{n+1}=
+\theta_n+\omega_{n+1}\Delta t.
+$$
+
+This small change produces substantially different long-term behavior. For oscillatory systems, Euler-Cromer keeps the trajectory bounded and preserves the qualitative structure of phase space much more effectively than standard Euler integration.
+
+### Comparing Numerical Behavior
+
+For a short simulation, both methods can produce trajectories that appear reasonable. Over many periods, however, their differences accumulate and become visible in the system's energy and phase-space geometry.
+
+This makes the pendulum a useful test of long-term qualitative behavior. The important question is not only how closely a numerical trajectory follows the exact solution at a given time, but whether it preserves the fundamental structure of the dynamics: bounded oscillations, approximately conserved energy, and closed phase-space trajectories.
+
+The comparison therefore asks whether a numerical method reproduces the character of the dynamics over long times, not simply the motion over a short interval.
+
+## Results
+
+### 1. Numerical Methods and Long-Term Behavior
+
+Compare Euler and Euler-Cromer through angle, energy, and phase space.
+
+### 2. Phase-Space Geometry of the Linear and Nonlinear Pendulum
+
+Compare the linearized and nonlinear equations at large amplitude, emphasizing distorted orbits and the separatrix.
+
+### 3. Damping and the Transition from Rotation to Oscillation
+
+Use the synchronized animation of the pendulum, phase space, and kinetic/potential/total energy to show the loss of energy and crossing of the separatrix.
+
+## Stroboscopic Sampling
+
+Introduce stroboscopic maps as discrete samples of a continuous phase-space trajectory:
+
+$$
+\mathbf{x}_n=\mathbf{x}(nT_s).
+$$
+
+### 4. Commensurability and Stroboscopic Phase Drift
+
+Compare exact commensurability with slight detuning:
+
+$$
+T_s=\frac{T_0}{3}
+$$
+
+versus
+
+$$
+\omega_s=3.05\omega_0.
+$$
+
+Show how exact commensurability produces a repeating finite set of stroboscopic points, while slight detuning produces accumulating phase drift.
+
+### 5. Amplitude-Dependent Period and Stroboscopic Alignment
+
+Show how damping changes the nonlinear pendulum's amplitude and therefore its period. Explain how a fixed sampling interval can initially be mismatched with the pendulum's phase but become increasingly aligned as the amplitude decreases.
 
 ## Key Findings
 
-* Euler's Method exhibits systematic energy growth when applied to the undamped pendulum, while Euler-Cromer's energy error remains bounded and oscillatory.
-* Euler-Cromer therefore provides substantially more stable long-term behavior for the oscillatory system.
-* The pendulum is nonlinear: its period increases with initial amplitude rather than remaining constant.
-* As a damped pendulum loses energy, its amplitude decreases and its period approaches the small-angle prediction.
-* Phase space reveals distinct regimes of oscillation and rotation separated by a separatrix.
-* Damping can cause an initially rotating pendulum to cross the separatrix and transition into oscillatory motion.
-* A driven pendulum contains both a decaying transient response and a sustained steady-state response.
-* The driven pendulum exhibits resonance when the driving frequency approaches the characteristic frequency of the system.
-* Increasing damping reduces the maximum resonant response and broadens the resonance curve.
+* Euler and Euler-Cromer produce qualitatively different long-term behavior for oscillatory systems.
+* Phase space makes numerical artifacts and energy behavior more apparent than angle-versus-time plots alone.
+* The small-angle approximation produces qualitatively different phase-space geometry from the full nonlinear pendulum at large amplitudes.
+* The separatrix separates oscillatory and rotational motion.
+* Damping can move the pendulum from rotational motion into oscillatory motion by reducing its mechanical energy below the separatrix energy.
+* Stroboscopic sampling converts continuous phase-space trajectories into discrete geometric structures that reveal commensurability and phase drift.
+* Because the nonlinear pendulum's period depends on amplitude, damping can change the relationship between the pendulum and a fixed stroboscopic sampling interval.
 
 ## Project Structure
 
 ```text
-Pendulum/
-├── main.py           Runs simulations and generates plots
-├── physics.py        Defines the pendulum equations of motion
-├── solvers.py        Implements Euler and Euler-Cromer integration
-├── analysis.py       Performs period, energy, and resonance analysis
-├── requirements.txt  Lists project dependencies
-└── README.md         Project documentation
+Pendulum_Phase_Space/
+├── main.py
+├── physics.py
+├── solvers.py
+├── animations.py
+├── images/
+├── requirements.txt
+└── README.md
+```
+
+## Requirements
+
+* Python 3
+* NumPy
+* Matplotlib
+
+## Running the Project
+
+### 1. Clone the repository
+
+```bash
+git clone [repository-url]
+cd [repository-name]
+```
+
+### 2. Install the dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the project
+
+```bash
+python main.py
+```
+
+The program generates the phase-space plots, numerical comparisons, and animations described above.
+
+## Future Improvements
+
+* Compare the custom numerical integrators with higher-order methods such as RK4.
+* Investigate the exact nonlinear period using elliptic integrals.
+* Analyze the modified energy associated with Euler-Cromer.
+* Introduce a genuinely nonzero periodic driving force.
+* Extend the stroboscopic analysis to periodically driven nonlinear dynamics.
+* Explore period-doubling and chaotic regimes.
+
+## Conclusion
+
+This project uses the pendulum as a simple dynamical system for investigating how motion can be understood through phase-space geometry.
+
+The comparison of Euler's Method and Euler-Cromer demonstrates that numerical integration can affect not only quantitative accuracy but also the qualitative geometry of an oscillatory system. The transition from the linearized to the nonlinear pendulum then reveals how the approximation $\sin\theta\approx\theta$ changes the structure of phase space, including the appearance of a separatrix separating oscillatory and rotational motion.
+
+Damping provides a way to observe transitions between these regimes, while stroboscopic sampling provides a discrete view of continuous motion. Exact commensurability produces repeating phase-space structures, slight detuning produces accumulating phase drift, and the amplitude-dependent period of the nonlinear pendulum can change its relationship with a fixed sampling interval as the system loses energy.
+
+The central theme of the project is therefore not simply modeling a pendulum, but understanding how **numerical methods, nonlinear dynamics, and phase-space representations reveal different aspects of the same physical system**.
