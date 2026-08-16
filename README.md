@@ -381,7 +381,7 @@ The transition is visible simultaneously in all three panels. In the physical vi
 
 The animation therefore makes the connection between energy, phase-space geometry, and physical motion explicit: damping changes the energy of the system, and the resulting crossing of the separatrix changes the qualitative character of its motion.
 
-## Stroboscopic Sampling
+## Stroboscopic Sampling and Phase Drift
 
 A phase-space trajectory describes the states visited by the system and the geometry connecting them, but a static plot does not directly indicate how the trajectory is traversed in time. Stroboscopic sampling adds a fixed temporal reference by recording the state of the system at regular intervals,
 
