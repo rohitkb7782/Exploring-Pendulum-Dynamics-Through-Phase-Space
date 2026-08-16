@@ -100,7 +100,7 @@ $$
 \ddot{\theta}+\frac{b}{m}\dot{\theta}+\frac{g}{L}\sin\theta=0,
 $$
 
-where $b$ is the damping coefficient.
+where $b$ is the linear viscous damping coefficient.
 
 Damping causes the mechanical energy of the pendulum to decrease over time. In phase space, this changes the trajectories from closed curves into inward spirals, allowing the system to transition from higher-energy motion toward oscillations around the stable equilibrium.
 
@@ -290,7 +290,7 @@ $$
 \det(A_{\mathrm{EC}})=1.
 $$
 
-Because the determinant gives the factor by which a two-dimensional transformation scales area, Euler expands phase-space area at every timestep, while Euler-Cromer preserves it.
+Because the absolute value of the determinant gives the factor by which a two-dimensional transformation scales area, Euler expands phase-space area at every timestep, while Euler-Cromer preserves it.
 
 ![Euler vs. Euler-Cromer Phase Space](files/euler_vs_euler-cromer_phase_space.png?raw=true)
 
@@ -331,6 +331,8 @@ $$
 A\propto E.
 $$
 
+Although phase-space area preservation and energy conservation are closely linked here, they are not the same. Euler-Cromer does not conserve the numerical energy exactly at every timestep, but its area-preserving update keeps the trajectory bounded.
+
 The outward expansion of Euler's phase-space trajectory therefore corresponds directly to its artificial growth in energy, while Euler-Cromer's area-preserving update keeps the trajectory bounded.
 
 ### 3. Phase Space of the Nonlinear Pendulum
@@ -341,7 +343,7 @@ The phase-space geometry changes significantly as the pendulum's amplitude incre
 
 **Figure 3.** *Phase-space trajectories of the nonlinear pendulum at increasing energies, showing the transition from small oscillations to large-amplitude motion, the separatrix, and rotational motion.*
 
-At small amplitudes, the trajectory is approximately elliptical and closely resembles the phase-space orbit predicted by the linearized pendulum. As the amplitude increases, however, the nonlinear $\sin\theta$ term becomes increasingly important. The orbit becomes distorted, with the top and bottom portions developing progressively sharper corners as the trajectory approaches the separatrix.
+At small amplitudes, the trajectory is approximately elliptical and closely resembles the phase-space orbit predicted by the linearized pendulum. As the amplitude increases, however, the nonlinear $\sin\theta$ term becomes increasingly important. The orbit becomes distorted, with the top and bottom portions developing progressively sharper turns as the trajectory approaches the separatrix.
 
 The separatrix marks the boundary between two qualitatively different regimes of motion. Inside it, the pendulum oscillates around the stable equilibrium, represented by the black point at the center of the figure. Outside it, the pendulum has enough energy to rotate continuously rather than reverse direction. The sinusoidal-looking trajectory outside the separatrix therefore represents a different dynamical regime, not simply a larger oscillation.
 
@@ -355,7 +357,7 @@ $$
 
 For the pendulum, these are precisely the conditions for equilibrium. At the unstable equilibrium, nearby trajectories do not form closed orbits around the point. Instead, the separatrix approaches and departs from it, producing the cusp-like structure visible in the limiting phase-space geometry.
 
-This gives the phase-space picture a direct dynamical interpretation: closed trajectories around the stable equilibrium represent oscillations, the separatrix is the boundary between regimes, and trajectories outside it represent continuous rotation. The geometry changes continuously with energy, but the type of motion changes qualitatively when the separatrix is crossed.
+This gives the phase-space picture a direct dynamical interpretation: closed trajectories around the stable equilibrium represent oscillations, the separatrix is the boundary between regimes, and trajectories outside it represent continuous rotation. The phase-space geometry changes continuously with energy, while crossing the separatrix marks a qualitative change in the type of motion.
 
 ### 4. Damping and the Transition from Rotation to Oscillation
 
@@ -447,7 +449,7 @@ where $T_0$ is the small-angle period.
 
 ![Stroboscopic Sampling of Damped Pendulum](files/stroboscope_pendulum.png?raw=true)
 
-**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum. The left panel shows the sampled phase-space trajectory, while the right panel shows the pendulum angle with vertical lines marking the sampling times. As damping reduces the amplitude, the nonlinear period approaches the small-angle period, causing the stroboscopic pattern to become increasingly aligned.*
+**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum. As damping reduces the amplitude, the nonlinear period approaches the fixed sampling timescale, reducing the phase drift visible in both phase space and the angle-versus-time plot.*
 
 At the beginning of the simulation, the pendulum has a large amplitude, so its nonlinear period is longer than the small-angle period:
 
@@ -455,17 +457,44 @@ $$
 T(\theta_{\max})>T_0.
 $$
 
-The fixed sampling interval is therefore slightly mismatched with the pendulum's actual period. In phase space, this mismatch appears as successive triangular patterns that slowly rotate around the underlying trajectory. The angle-versus-time plot shows the same phase drift as the sampling lines gradually shift relative to the oscillation.
-
-As damping reduces the amplitude,
+Since the sampling interval is fixed at
 
 $$
-T(\theta_{\max})\rightarrow T_0,
+T_s=\frac{T_0}{3},
 $$
 
-and the stroboscopic triangles rotate more slowly, becoming increasingly aligned with one another.
+the initial ratio between the pendulum's period and the sampling interval satisfies
 
-The sampling does not alter the pendulum's dynamics or synchronize its motion. Instead, it reveals how damping changes the relationship between the pendulum's amplitude-dependent period and a fixed sampling interval. The changing stroboscopic pattern therefore provides a geometric view of the pendulum's evolving timescale.
+$$
+\frac{T(\theta_{\max})}{T_s}>3.
+$$
+
+The sampling is therefore not exactly synchronized with three samples per oscillation. This mismatch causes the sampled phase-space points to drift from one cycle to the next, producing triangular patterns that gradually rotate around the underlying trajectory. The angle-versus-time plot shows the same effect as the sampling lines progressively shift relative to the oscillation.
+
+As damping reduces the oscillation amplitude, the nonlinear period approaches the small-angle period:
+
+$$
+T(\theta_{\max})\rightarrow T_0.
+$$
+
+Consequently, the ratio of the pendulum's period to the sampling interval approaches
+
+$$
+\frac{T(\theta_{\max})}{T_s}
+\rightarrow
+\frac{T_0}{T_0/3}
+=3.
+$$
+
+Thus, the stroboscopic sampling progressively approaches the condition of exactly three samples per oscillation. As this ratio converges toward 3, the phase drift decreases and the successive triangular patterns become increasingly aligned with one another.
+
+The sampling does not alter the pendulum's dynamics or synchronize its motion. Instead, it reveals the changing relationship between the pendulum's amplitude-dependent period and the fixed sampling interval. The gradual convergence of
+
+$$
+\frac{T(\theta_{\max})}{T_s}\rightarrow3
+$$
+
+therefore provides a geometric signature of the pendulum's changing timescale as damping reduces its amplitude.
 
 ## Key Findings
 
