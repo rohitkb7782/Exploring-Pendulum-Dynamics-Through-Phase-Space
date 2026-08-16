@@ -213,8 +213,6 @@ The comparison therefore asks whether a numerical method reproduces the characte
 
 ## Results
 
-## Results
-
 The first two results use the **linearized pendulum** rather than the full nonlinear equation. This provides a simpler mathematical setting in which to isolate the behavior of the numerical methods before introducing nonlinear phase-space geometry.
 
 ### 1. Euler vs. Euler-Cromer — $\theta(t)$ and Energy
