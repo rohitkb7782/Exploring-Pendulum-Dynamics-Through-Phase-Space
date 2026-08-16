@@ -197,7 +197,7 @@ ax2.legend(loc='upper left', bbox_to_anchor=(0.02, 0.98))
 # Case 2: T_sample = T0/3.05
 # ============================================================
 
-strobe_period = period / 3.05
+strobe_period = period / np.sqrt(9.3)
 times = np.arange(0, 50, strobe_period/100)
 
 states = euler_cromer_solver(
@@ -215,7 +215,7 @@ ax3 = axes[1, 0]
 ax3.plot(theta, omega)
 ax3.plot(theta[::100], omega[::100], 'o-', linewidth=0.5)
 
-ax3.set_title(r"Phase Space — $T_{\mathrm{sample}}=T_0/3.05$")
+ax3.set_title(r"Phase Space — $T_{\mathrm{sample}}=T_0/\sqrt{9.3}$")
 ax3.set_xlabel(r"Angle, $\theta$ [rad]")
 ax3.set_ylabel(r"Angular Velocity, $\omega$ [rad/s]")
 
@@ -233,7 +233,7 @@ ax4.vlines(
     label='Stroboscopic Sampling Times'
 )
 
-ax4.set_title(r"Angle vs. Time — $T_{\mathrm{sample}}=T_0/3.05$")
+ax4.set_title(r"Angle vs. Time — $T_{\mathrm{sample}}=T_0/\sqrt{9.3}$")
 ax4.set_xlabel(r"Time, $t$ [s]")
 ax4.set_ylabel(r"Angle, $\theta$ [rad]")
 ax4.legend(loc='upper left', bbox_to_anchor=(0.02, 0.98))
