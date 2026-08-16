@@ -1,16 +1,18 @@
 # Exploring Pendulum Dynamics Through Phase Space
 
-A computational physics project investigating how phase space can be used to visualize and interpret the dynamics of a pendulum. The project begins with numerical integration and a comparison of Euler's Method and Euler-Cromer, then uses phase-space geometry to examine the transition from linear to nonlinear behavior, the effects of damping, and the structure revealed by stroboscopic sampling.
+Rather than asking only *where is the pendulum at a given time?*, phase space allows us to ask *what states can the pendulum occupy, and how does it move between them?*
+
+This computational physics project uses the pendulum as a simple dynamical system for exploring these questions. It begins with a comparison of Euler's Method and Euler-Cromer, then uses phase-space geometry to examine the transition from linear to nonlinear behavior, the boundary between oscillation and rotation, and the effects of damping. Finally, stroboscopic sampling reveals how the relationship between a fixed sampling interval and the pendulum's period produces structures that are difficult to see in the continuous trajectory alone.
 
 ![Phase space](files/stroboscope_pendulum.png?raw=true)
 
-**Figure 6.** [Opening figure/collage to be selected.]
+**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum, showing the changing phase relationship between the pendulum and a fixed sampling interval.*
 
 ## Motivation
 
 ### Phase Space
 
-Motion is often represented by plotting a variable such as position or angle against time. While this shows how a system evolves, it can hide the underlying structure of that motion. Phase space provides a different perspective by representing the state of a system through its position and velocity. For the pendulum, this state is
+A time-domain plot shows how a variable changes, but it does not always make the structure of that motion easy to see. Phase space instead represents the state of a system through its position and velocity. For the pendulum, this state is
 
 $$
 (\theta,\omega),
@@ -18,9 +20,9 @@ $$
 
 where $\theta$ is the angular displacement and $\omega=\dot{\theta}$ is the angular velocity.
 
-The resulting trajectory gives a geometric view of the dynamics. Periodic oscillations appear as closed curves, rotational motion follows different trajectories, and the boundary between these regimes appears as a separatrix. Numerical error, damping, and nonlinear effects can therefore be studied through changes in phase-space geometry.
+This representation turns the dynamics into geometry. Periodic oscillations form closed trajectories, rotational motion follows a distinct class of trajectories, and the boundary between these regimes appears as a separatrix. It also makes changes caused by numerical error, damping, and nonlinear effects directly visible in the geometry of the trajectory.
 
-Rather than asking only *where is the pendulum at a given time?*, phase space allows us to ask *what states can the pendulum occupy, and how does it move between them?*
+For this project, phase space is therefore more than an alternative way to plot the motion: it provides a way to connect the pendulum's state, energy, and long-term dynamics in a single representation.
 
 ### The Pendulum
 
@@ -431,7 +433,7 @@ where $T_0$ is the small-angle period.
 
 ![Stroboscopic Sampling of Damped Pendulum](files/stroboscope_pendulum.png?raw=true)
 
-**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum. The left panel shows the sampled phase-space trajectory, while the right panel shows the pendulum angle with vertical lines marking the sampling times.*
+**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum. The left panel shows the sampled phase-space trajectory, while the right panel shows the pendulum angle with vertical lines marking the sampling times. As damping reduces the amplitude, the nonlinear period approaches the small-angle period, causing the stroboscopic pattern to become increasingly aligned.*
 
 At the beginning of the simulation, the pendulum has a large amplitude, so its nonlinear period is longer than the small-angle period:
 
@@ -439,27 +441,27 @@ $$
 T(\theta_{\max})>T_0.
 $$
 
-The fixed sampling interval is therefore slightly mismatched with the pendulum's actual period. In phase space, this appears as successive triangular patterns that slowly rotate around the underlying trajectory. The angle-versus-time plot shows the same phase drift as the sampling lines gradually shift relative to the oscillation.
+The fixed sampling interval is therefore slightly mismatched with the pendulum's actual period. In phase space, this mismatch appears as successive triangular patterns that slowly rotate around the underlying trajectory. The angle-versus-time plot shows the same phase drift as the sampling lines gradually shift relative to the oscillation.
 
-As damping reduces the amplitude, the nonlinear period approaches the small-angle value,
+As damping reduces the amplitude,
 
 $$
-T(\theta_{\max})\rightarrow T_0.
+T(\theta_{\max})\rightarrow T_0,
 $$
 
-The mismatch between the sampling interval and the pendulum's period consequently decreases. The stroboscopic triangles rotate more slowly and become increasingly aligned as the pendulum approaches the small-angle regime.
+and the stroboscopic triangles rotate more slowly, becoming increasingly aligned with one another.
 
-The sampling does not alter the pendulum's dynamics or synchronize its motion. Instead, it reveals how the relationship between the fixed sampling interval and the amplitude-dependent period changes as the system loses energy. What appears as geometric alignment in phase space is therefore a consequence of the pendulum's changing timescale.
+The sampling does not alter the pendulum's dynamics or synchronize its motion. Instead, it reveals how damping changes the relationship between the pendulum's amplitude-dependent period and a fixed sampling interval. The changing stroboscopic pattern therefore provides a geometric view of the pendulum's evolving timescale.
 
 ## Key Findings
 
 * Euler and Euler-Cromer produce qualitatively different long-term behavior for oscillatory systems.
 * Phase space makes numerical artifacts and energy behavior more apparent than angle-versus-time plots alone.
-* The linearized approximation produces qualitatively different phase-space geometry from the full nonlinear pendulum at large amplitudes.
-* The separatrix separates oscillatory and rotational motion.
+* At large amplitudes, the linearized approximation produces qualitatively different phase-space geometry from the full nonlinear pendulum.
+* The separatrix marks the boundary between oscillatory and rotational motion.
 * Damping can move the pendulum from rotational motion into oscillatory motion by reducing its mechanical energy below the separatrix energy.
-* Stroboscopic sampling converts continuous phase-space trajectories into discrete geometric structures that reveal commensurability and phase drift.
-* Because the nonlinear pendulum's period depends on amplitude, damping can change the relationship between the pendulum and a fixed stroboscopic sampling interval.
+* Stroboscopic sampling reveals discrete geometric structures that depend on the commensurability between the sampling interval and the pendulum's period.
+* Because the nonlinear pendulum's period depends on amplitude, damping can change its phase relationship with a fixed stroboscopic sampling interval.
 
 ## Project Structure
 
@@ -508,7 +510,7 @@ The program generates the phase-space plots, numerical comparisons, and animatio
 * Compare the custom numerical integrators with higher-order methods such as RK4.
 * Investigate the exact nonlinear period using elliptic integrals.
 * Analyze the modified energy associated with Euler-Cromer.
-* Investigate the phase space after introducing a periodic driving force.
+* Investigate the phase-space structure of a periodically driven pendulum.
 * Extend the stroboscopic analysis to periodically driven nonlinear dynamics.
 * Explore period-doubling and chaotic regimes.
 
@@ -516,8 +518,8 @@ The program generates the phase-space plots, numerical comparisons, and animatio
 
 This project uses the pendulum as a simple dynamical system for investigating how motion can be understood through phase-space geometry.
 
-The comparison of Euler's Method and Euler-Cromer demonstrates that numerical integration can affect not only quantitative accuracy but also the qualitative geometry of an oscillatory system. The transition from the linearized to the nonlinear pendulum then reveals how the approximation $\sin\theta\approx\theta$ changes the structure of phase space, including the appearance of a separatrix separating oscillatory and rotational motion.
+The comparison of Euler's Method and Euler-Cromer shows that numerical integration can affect not only quantitative accuracy but also the qualitative structure of an oscillatory system. Moving from the linearized to the nonlinear pendulum then reveals how the approximation $\sin\theta\approx\theta$ changes that structure, producing distorted trajectories and a separatrix between oscillatory and rotational motion.
 
-Damping provides a way to observe transitions between these regimes, while stroboscopic sampling provides a discrete view of continuous motion. Exact commensurability produces repeating phase-space structures, slight detuning produces accumulating phase drift, and the amplitude-dependent period of the nonlinear pendulum can change its relationship with a fixed sampling interval as the system loses energy.
+Damping makes this phase-space structure dynamic: as the pendulum loses energy, its trajectory can cross the separatrix and move from rotation into oscillation. Stroboscopic sampling reveals another layer of the same dynamics, with commensurability producing repeating structures and detuning producing phase drift. Because the nonlinear period depends on amplitude, damping can also change the relationship between the pendulum and a fixed sampling interval.
 
-The central theme of the project is therefore not simply modeling a pendulum, but understanding how **numerical methods, nonlinear dynamics, and phase-space representations reveal different aspects of the same physical system**.
+The central theme of the project is therefore not simply modeling a pendulum, but using numerical methods and phase-space representations to reveal the structure and evolution of a dynamical system.
