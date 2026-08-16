@@ -2,7 +2,7 @@
 
 Rather than asking only *where is the pendulum at a given time?*, phase space allows us to ask *what states can the pendulum occupy, and how does it move between them?*
 
-This computational physics project uses the pendulum as a simple dynamical system for exploring these questions. It begins with a comparison of Euler's Method and Euler-Cromer, then uses phase-space geometry to examine the transition from linear to nonlinear behavior, the boundary between oscillation and rotation, and the effects of damping. Finally, stroboscopic sampling reveals how the relationship between a fixed sampling interval and the pendulum's period produces structures that are difficult to see in the continuous trajectory alone.
+This computational physics project uses the pendulum as a simple dynamical system for exploring these questions. It begins with a comparison of Euler's Method and Euler-Cromer, then uses phase-space geometry to examine the transition from linear to nonlinear behavior, the boundary between oscillation and rotation, and the effects of damping. Finally, stroboscopic sampling examines what happens when temporal information is reintroduced into the phase-space representation, revealing how the relationship between a fixed sampling interval and the pendulum's period produces structures that are difficult to see in the continuous trajectory alone.
 
 ![Phase space](files/stroboscope_pendulum.png?raw=true)
 
@@ -12,7 +12,7 @@ This computational physics project uses the pendulum as a simple dynamical syste
 
 ### Phase Space
 
-A time-domain plot shows how a variable changes, but it does not always make the structure of that motion easy to see. Phase space instead represents the state of a system through its position and velocity. For the pendulum, this state is
+A time-domain plot shows how a variable changes with time, but it does not always make the structure of that motion easy to see. Phase space instead represents the state of a system through its position and velocity. For the pendulum, this state is
 
 $$
 (\theta,\omega),
@@ -20,9 +20,11 @@ $$
 
 where $\theta$ is the angular displacement and $\omega=\dot{\theta}$ is the angular velocity.
 
-This representation turns the dynamics into geometry. Periodic oscillations form closed trajectories, rotational motion follows a distinct class of trajectories, and the boundary between these regimes appears as a separatrix. It also makes changes caused by numerical error, damping, and nonlinear effects directly visible in the geometry of the trajectory.
+This representation turns the dynamics into geometry. Periodic oscillations form closed trajectories, rotational motion follows a distinct class of trajectories, and the boundary between these regimes appears as a separatrix. It also makes the effects of numerical error, damping, and nonlinear dynamics directly visible in the geometry of the trajectory.
 
-For this project, phase space is therefore more than an alternative way to plot the motion: it provides a way to connect the pendulum's state, energy, and long-term dynamics in a single representation.
+For this project, phase space is therefore more than an alternative way to plot the motion: it provides a way to connect the pendulum's state, energy, and long-term behavior in a single representation.
+
+A phase-space trajectory, however, does not directly show how the system's motion relates to an external timescale. Although the trajectory is generated through time evolution, a static phase-space plot does not explicitly indicate when different states are visited. Stroboscopic sampling provides a way to examine this relationship by recording the phase-space state at regular intervals and comparing the sampling interval with the pendulum's period.
 
 ### The Pendulum
 
@@ -36,13 +38,13 @@ providing a direct comparison between linear and nonlinear behavior within the s
 
 At larger amplitudes, nonlinear effects distort the phase-space trajectories and produce a separatrix between oscillatory and rotational motion. Damping adds another layer by causing the system to lose energy and potentially move between these dynamical regimes.
 
-The pendulum therefore provides a compact setting for exploring how numerical methods, nonlinearity, energy, and damping shape the geometry of a dynamical system.
+The pendulum therefore provides a compact setting for exploring how numerical methods, nonlinearity, energy, damping, and the relationship between intrinsic and external timescales shape the geometry of a dynamical system.
 
 ### Research Question
 
-> **How does the geometry of phase space reveal the dynamics of a pendulum?**
+> **How does phase-space geometry reveal the numerical and dynamical behavior of a pendulum, and how does stroboscopic sampling reveal the relationship between its changing timescale and a fixed temporal reference?**
 
-This question guides the project from numerical simulation to phase-space analysis, using computation not simply to model the pendulum, but to reveal the structure of its dynamics.
+This question guides the project from numerical integration to phase-space analysis, beginning with the behavior of different numerical methods, then examining nonlinear geometry and damping, and finally using stroboscopic sampling to investigate how the pendulum's changing period relates to a fixed sampling interval.
 
 ## Mathematical Model
 
@@ -381,67 +383,47 @@ The animation therefore makes the connection between energy, phase-space geometr
 
 ## Stroboscopic Sampling
 
-A continuous phase-space trajectory contains more information than can be seen from a single snapshot. **Stroboscopic sampling** provides a way to extract discrete structure from that trajectory by recording the state of the system at regular intervals,
+A phase-space trajectory describes the states visited by the system and the geometry connecting them, but a static plot does not directly indicate how the trajectory is traversed in time. Stroboscopic sampling adds a fixed temporal reference by recording the state of the system at regular intervals,
 
 $$
 \mathbf{x}_n=\mathbf{x}(nT_s).
 $$
 
-For a periodic system, the geometry of these sampled points depends on the relationship between the sampling interval $T_s$ and the period of the motion. When the two are exactly commensurate, the samples repeat after a finite number of steps. When they are slightly mismatched, the sampling phase drifts from cycle to cycle, producing a different pattern.
+For a periodic system, the resulting pattern depends on the relationship between the sampling interval $T_s$ and the period of the motion. If the two are commensurate, the sampled states repeat after a finite number of steps. If they are not commensurate, the sampling phase drifts from cycle to cycle.
+
+The sampled points therefore do not represent a new dynamical trajectory. Instead, they reveal how the system's motion is traversed relative to a fixed sampling clock. This makes the relationship between the pendulum's intrinsic timescale and an external temporal reference visible in phase space.
 
 ### 5. Commensurability and Stroboscopic Phase Drift
 
-The figure demonstrates this idea using the linearized pendulum, whose continuous phase-space trajectory is an ellipse. The top row uses a sampling interval
+A linearized pendulum provides a simple demonstration of how the sampled phase-space pattern depends on the relationship between the sampling interval and the oscillation period. The continuous phase-space trajectory is an ellipse. The sampling interval is deliberately chosen relative to the small-angle period rather than derived from the pendulum dynamics; this controlled choice makes the effects of commensurability and phase drift especially clear. For the top row,
 
 $$
 T_s=\frac{T_0}{3},
 $$
 
-so exactly three samples are taken during each oscillation period. The bottom row uses a slightly detuned sampling period,
+so three sampling intervals correspond exactly to one oscillation period:
 
 $$
-T_s=\frac{T_0}{\sqrt{9.3}},
+3T_s=T_0.
 $$
 
-which shifts the sampling interval slightly away from exact commensurability. The important difference is that $T_s$ is no longer exactly $T_0/3$. Consequently, the sampling points do not return to the same three phases after each oscillation, and the sampling phase gradually drifts.
+The sampled states therefore repeat after every three points, producing a triangular pattern in phase space. 
 
 ![Stroboscopic Sampling of Linearized Pendulum](files/stroboscope_basics.png?raw=true)
 
 **Figure 5.** *Stroboscopic sampling of a linearized pendulum. The top row shows exact commensurability, with*
 $T_s=T_0/3$, *while the bottom row shows slight detuning,*
-$T_s=T_0/\sqrt{9.3}$, *and the resulting phase drift.*
+$T_s=T_0/\sqrt{9.3}$, *producing phase drift.*
 
-In the top-left panel, the continuous phase-space trajectory remains an ellipse, while the sampled points form a triangle. Because three sampling intervals make exactly one period,
-
-$$
-3T_s=T_0,
-$$
-
-the sampling sequence returns to the same phase after every three points:
+For the bottom row, the sampling interval is slightly detuned:
 
 $$
-A\rightarrow B\rightarrow C\rightarrow A\rightarrow\cdots
+T_s=\frac{T_0}{\sqrt{9.3}}.
 $$
 
-The top-right angle-versus-time plot shows the same relationship in the time domain. The vertical sampling lines repeatedly intersect the oscillation at the same three phases, so the pattern of sampled states repeats exactly.
+The sampling interval is now incommensurate with the pendulum's period, so the sampling phase does not repeat exactly. Instead, the sampled points gradually move around the underlying ellipse, producing the apparent rosette. The continuous pendulum trajectory itself is unchanged; the pattern arises from sampling that trajectory at a fixed interval that does not match its period.
 
-The bottom row demonstrates what happens when the $3:1$ commensurability is slightly disturbed. With
-
-$$
-T_s=\frac{T_0}{\sqrt{9.3}},
-$$
-
-the sampling interval is no longer exactly one third of the pendulum's period. Each sample therefore occurs at a slightly different phase, causing the sampling pattern to drift from cycle to cycle. In addition, because
-
-$$
-\frac{T_s}{T_0}=\frac{1}{\sqrt{9.3}}
-$$
-
-is irrational, the sampling phase never returns exactly to its initial value. The sampled points therefore continue to move around the underlying ellipse rather than repeating as a finite set.
-
-The angle-versus-time plot makes this phase drift visible directly: the sampling lines gradually move relative to the peaks and troughs of the oscillation. The phase-space rosette is therefore not a new trajectory of the pendulum. It is the geometric pattern produced by sampling the same continuous trajectory at a slightly mismatched interval.
-
-This provides a simple demonstration of what stroboscopic sampling reveals: the continuous orbit remains an ellipse, while the discrete sampling pattern records the relationship between the oscillator's period and the sampling clock.
+This simple example establishes the mechanism used in the next experiment. There, the sampling interval remains fixed while the nonlinear pendulum's period changes with amplitude, allowing the evolution of the sampling phase relationship to be observed as the pendulum damps.
 
 ### 6. Amplitude-Dependent Period and Stroboscopic Alignment
 
@@ -455,7 +437,7 @@ where $T_0$ is the small-angle period.
 
 ![Stroboscopic Sampling of Damped Pendulum](files/stroboscope_pendulum.png?raw=true)
 
-**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum. As damping reduces the amplitude, the nonlinear period approaches the small-angle period, causing the ratio* 
+**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum. As damping reduces the amplitude, the nonlinear period approaches the small-angle period, causing the ratio*
 $T(\theta_{max})/T_s$ *to converge toward 3 and reducing the phase drift visible in both phase space and the angle-versus-time plot.*
 
 At the beginning of the simulation, the pendulum has a large amplitude, so its nonlinear period is longer than the small-angle period:
@@ -493,7 +475,7 @@ $$
 =3.
 $$
 
-Thus, the stroboscopic sampling progressively approaches the condition of exactly three samples per oscillation. As this ratio converges toward 3, the phase drift decreases and the successive triangular patterns become increasingly aligned with one another, reflecting the decreasing phase drift.
+Thus, the stroboscopic sampling progressively approaches the condition of exactly three samples per oscillation. As this ratio converges toward 3, the phase drift decreases and the successive triangular patterns become increasingly aligned with one another.
 
 The sampling does not alter the pendulum's dynamics or synchronize its motion. Instead, it reveals the changing relationship between the pendulum's amplitude-dependent period and the fixed sampling interval. The gradual convergence of
 
@@ -505,13 +487,13 @@ therefore provides a geometric signature of the pendulum's changing timescale as
 
 ## Key Findings
 
-* Euler and Euler-Cromer produce qualitatively different long-term behavior for oscillatory systems.
-* Phase space makes numerical artifacts and energy behavior more apparent than angle-versus-time plots alone.
-* At large amplitudes, the linearized approximation produces qualitatively different phase-space geometry from the nonlinear pendulum.
-* The separatrix marks the boundary between oscillatory and rotational motion.
-* Damping can move the pendulum from rotational motion into oscillatory motion by reducing its mechanical energy below the separatrix energy.
-* Stroboscopic sampling reveals discrete geometric structures that depend on the commensurability between the sampling interval and the pendulum's period.
-* Because the nonlinear pendulum's period depends on amplitude, damping can change its phase relationship with a fixed stroboscopic sampling interval.
+* Euler's Method introduces systematic energy growth in long integrations of oscillatory systems, while Euler-Cromer preserves bounded phase-space motion much more effectively.
+* Phase-space geometry makes the qualitative effects of numerical error visible through the expansion or boundedness of trajectories.
+* The linearized pendulum accurately describes small-amplitude motion, but nonlinear effects increasingly distort the phase-space trajectories at larger amplitudes.
+* The separatrix, corresponding to the critical energy $E_{\mathrm{sep}}=2mgL$, separates oscillatory motion from continuous rotation.
+* Damping causes the pendulum to lose energy and can drive a transition from rotational motion to oscillation as the trajectory crosses the separatrix.
+* Stroboscopic sampling reveals how the pendulum's motion relates to a fixed sampling timescale: commensurate periods produce repeating patterns, while mismatched periods produce phase drift.
+* Because the nonlinear period depends on amplitude, damping changes this phase relationship over time as the pendulum approaches the small-angle regime.
 
 ## Project Structure
 
@@ -566,10 +548,12 @@ The program generates the phase-space plots, numerical comparisons, and animatio
 
 ## Conclusion
 
-This project uses the pendulum as a simple dynamical system for investigating how motion can be understood through phase-space geometry.
+This project uses the pendulum as a simple dynamical system for investigating how numerical methods, phase-space geometry, nonlinearity, and damping shape our understanding of motion.
 
-The comparison of Euler's Method and Euler-Cromer shows that numerical integration can affect not only quantitative accuracy but also the qualitative structure of an oscillatory system. Moving from the linearized to the nonlinear pendulum then reveals how the approximation $\sin\theta\approx\theta$ changes that structure, producing distorted trajectories and a separatrix between oscillatory and rotational motion.
+The comparison of Euler's Method and Euler-Cromer shows that numerical integration affects not only quantitative accuracy but also the qualitative structure of an oscillatory system. Euler's Method introduces artificial energy growth over long integrations, while Euler-Cromer keeps the trajectory bounded and preserves the structure of phase space more effectively. Moving from the linearized to the nonlinear pendulum then shows how the approximation $\sin\theta\approx\theta$ breaks down at larger amplitudes, producing distorted trajectories and a separatrix between oscillatory and rotational motion.
 
-Damping makes this phase-space structure dynamic: as the pendulum loses energy, its trajectory can cross the separatrix and move from rotation into oscillation. Stroboscopic sampling reveals another layer of the same dynamics: exact commensurability produces repeating structures, detuning produces phase drift, and damping gradually changes that phase relationship as the nonlinear period approaches the small-angle period.
+Damping makes this phase-space structure dynamic. As the pendulum loses energy, its trajectory approaches and crosses the separatrix, producing a transition from rotational motion to oscillation around the stable equilibrium.
 
-The central theme of the project is therefore not simply modeling a pendulum, but using numerical methods and phase-space representations to reveal the structure and evolution of a dynamical system.
+Stroboscopic sampling extends this phase-space analysis by introducing a fixed temporal reference. A continuous phase-space trajectory describes the geometry of the motion, but does not directly show how that motion is traversed relative to an external clock. When the sampling interval is commensurate with the pendulum's period, the sampled states repeat; when the two timescales are mismatched, the sampling phase drifts. For the nonlinear damped pendulum, this relationship changes naturally because its period depends on amplitude and the amplitude decreases with damping. The choice of sampling interval in this experiment is deliberate rather than physically preferred; it provides a controlled way to expose the changing relationship between the pendulum's intrinsic period and an external temporal reference.
+
+The central theme of the project is therefore not simply modeling a pendulum, but examining how different methods of representation reveal different aspects of its dynamics. Numerical methods determine how faithfully the dynamics are reproduced, phase space reveals their geometric structure, and stroboscopic sampling reveals how that structure relates to a fixed temporal reference.
