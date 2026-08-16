@@ -103,6 +103,9 @@ all_thetas = np.arange(0, 35, 0.1)
 plt.plot(all_thetas, 2*np.sqrt(g/L) * np.cos(all_thetas/2), "--", color='black', label='Separatrix', linewidth=0.7)
 plt.plot(all_thetas, -2*np.sqrt(g/L) * np.cos(all_thetas/2), "--", color='black', linewidth=0.7)
 
+# Stable Equilibria
+plt.plot([0,2*np.pi,4*np.pi,6*np.pi,8*np.pi,10*np.pi],[0,0,0,0,0,0],'ko', ms=1)
+
 plt.xlabel(r"Angle, $\theta$ (rad)")
 plt.ylabel(r"Angular Velocity, $\omega$ (rad/s)")
 plt.title("Phase Space Dynamics of the Nonlinear Pendulum")
