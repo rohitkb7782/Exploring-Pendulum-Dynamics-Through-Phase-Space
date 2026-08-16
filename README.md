@@ -6,7 +6,7 @@ This computational physics project uses the pendulum as a simple dynamical syste
 
 ![Phase space](files/stroboscope_pendulum.png?raw=true)
 
-**Figure 6.** *Stroboscopic sampling of a damped nonlinear pendulum, showing the changing phase relationship between the pendulum and a fixed sampling interval.*
+*Stroboscopic sampling of a damped nonlinear pendulum, showing the changing phase relationship between the pendulum and a fixed sampling interval.*
 
 ## Motivation
 
@@ -97,7 +97,7 @@ The linearized model provides a useful reference for the full nonlinear system. 
 To investigate energy loss, a damping term is added:
 
 $$
-\ddot{\theta}+b\dot{\theta}+\frac{g}{L}\sin\theta=0,
+\ddot{\theta}+\frac{b}{m}\dot{\theta}+\frac{g}{L}\sin\theta=0,
 $$
 
 where $b$ is the damping coefficient.
@@ -296,7 +296,7 @@ Because the determinant gives the factor by which a two-dimensional transformati
 
 **Figure 2.** *Phase-space trajectories produced by Euler's Method and Euler-Cromer for the linearized pendulum.*
 
-This connects directly to the energy behavior in Figure 2. For the linearized pendulum, the mass-normalized energy is
+This connects directly to the energy behavior in Figure 1. For the linearized pendulum, the mass-normalized energy is
 
 $$
 E=\frac12\omega^2+\frac12\omega_0^2\theta^2.
@@ -363,7 +363,7 @@ The next animation follows a damped pendulum as it loses energy and crosses from
 
 ![Animation of Damped Pendulum, Phase Space, and Energy](files/damped_phase_space.gif?raw=true)
 
-**Figure 4.** *Damped pendulum transitioning from rotation to oscillation. The left panel shows the physical pendulum and velocity vector, the right panel shows its phase-space trajectory and separatrix, and the bottom panel shows the ktotal energy.*
+**Figure 4.** *Damped pendulum transitioning from rotation to oscillation. The left panel shows the physical pendulum and velocity vector, the right panel shows its phase-space trajectory and separatrix, and the bottom panel shows the total energy.*
 
 The pendulum begins above the separatrix energy and therefore has enough energy to rotate continuously. It completes two rotations while gradually losing energy through damping. As the total energy decreases toward
 
@@ -395,11 +395,19 @@ $$
 T_s=\frac{T_0}{3},
 $$
 
-so exactly three samples are taken during each oscillation period.
+so exactly three samples are taken during each oscillation period. The bottom row uses a slightly detuned sampling period,
+
+$$
+T_s=\frac{T_0}{3.05},
+$$
+
+which shifts the sampling interval slightly away from exact commensurability.
 
 ![Stroboscopic Sampling of Linearized Pendulum](files/stroboscope_basics.png?raw=true)
 
-**Figure 5.** *Stroboscopic sampling of a linearized pendulum. The top row shows exact commensurability, with $T_s=T_0/3$, while the bottom row shows a slightly detuned sampling interval and the resulting phase drift.*
+**Figure 5.** *Stroboscopic sampling of a linearized pendulum. The top row shows exact commensurability, with*
+$T_s=T_0/3$, *while the bottom row shows slight detuning,* 
+$T_s=T_0/3.05$, *and the resulting phase drift.*
 
 In the top-left panel, the continuous phase-space trajectory remains an ellipse, while the sampled points form a triangle. Because three sampling intervals make exactly one period,
 
@@ -415,7 +423,13 @@ $$
 
 The top-right angle-versus-time plot shows the same relationship in the time domain. The vertical sampling lines repeatedly intersect the oscillation at the same three phases, so the pattern of sampled states repeats exactly.
 
-The bottom row demonstrates what happens when this commensurability is slightly disturbed. With a sampling interval that is no longer exactly related to the pendulum's period, each sample occurs at a slightly different phase. The phase difference accumulates from cycle to cycle, causing the sampled points to move around the underlying ellipse and form a rosette-like pattern rather than a finite repeating set.
+The bottom row demonstrates what happens when this commensurability is slightly disturbed. With
+
+$$
+T_s=\frac{T_0}{3.05},
+$$
+
+the sampling interval is no longer exactly one third of the pendulum's period. Each sample therefore occurs at a slightly different phase, and the phase difference accumulates from cycle to cycle. In phase space, the sampled points move around the underlying ellipse and form a rosette-like pattern rather than a finite repeating set.
 
 The angle-versus-time plot makes this phase drift visible directly: the sampling lines gradually move relative to the peaks and troughs of the oscillation. The phase-space rosette is therefore not a new trajectory of the pendulum. It is the geometric pattern produced by sampling the same continuous trajectory at a slightly mismatched interval.
 
@@ -457,7 +471,7 @@ The sampling does not alter the pendulum's dynamics or synchronize its motion. I
 
 * Euler and Euler-Cromer produce qualitatively different long-term behavior for oscillatory systems.
 * Phase space makes numerical artifacts and energy behavior more apparent than angle-versus-time plots alone.
-* At large amplitudes, the linearized approximation produces qualitatively different phase-space geometry from the full nonlinear pendulum.
+* At large amplitudes, the linearized approximation produces qualitatively different phase-space geometry from the nonlinear pendulum.
 * The separatrix marks the boundary between oscillatory and rotational motion.
 * Damping can move the pendulum from rotational motion into oscillatory motion by reducing its mechanical energy below the separatrix energy.
 * Stroboscopic sampling reveals discrete geometric structures that depend on the commensurability between the sampling interval and the pendulum's period.
